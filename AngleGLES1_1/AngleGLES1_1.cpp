@@ -25,7 +25,7 @@
 #if USE_ANGLE_GLES
 extern "C"
 {
-//#include "loadgl.h"
+#include "loadgl.h"
 }
 #define HAVE_OPENGLES
 #endif
@@ -94,18 +94,18 @@ Render()
 
 
     /* Do our drawing, too. */
-    glClearColor(0.0, 0.0, 0.0, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    bglClearColor(0.0, 0.0, 0.0, 1.0);
+    bglClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     /* Draw the cube */
-    glColorPointer(4, GL_UNSIGNED_BYTE, 0, color);
-    glEnableClientState(GL_COLOR_ARRAY);
-    glVertexPointer(3, GL_FLOAT, 0, cube);
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_BYTE, indices);
+    bglColorPointer(4, GL_UNSIGNED_BYTE, 0, color);
+    bglEnableClientState(GL_COLOR_ARRAY);
+    bglVertexPointer(3, GL_FLOAT, 0, cube);
+    bglEnableClientState(GL_VERTEX_ARRAY);
+    bglDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_BYTE, indices);
 
-    glMatrixMode(GL_MODELVIEW);
-    glRotatef(5.0, 1.0, 1.0, 1.0);
+    bglMatrixMode(GL_MODELVIEW);
+    bglRotatef(5.0, 1.0, 1.0, 1.0);
 }
 
 int
@@ -209,16 +209,16 @@ main(int argc, char* argv[])
     }
 
 #if USE_ANGLE_GLES
-    //GLESInit();
+    GLESInit();
 #endif
 
     SDL_GetCurrentDisplayMode(0, &mode);
     SDL_Log("Screen bpp: %d\n", SDL_BITSPERPIXEL(mode.format));
     SDL_Log("\n");
-    SDL_Log("Vendor     : %s\n", glGetString(GL_VENDOR));
-    SDL_Log("Renderer   : %s\n", glGetString(GL_RENDERER));
-    SDL_Log("Version    : %s\n", glGetString(GL_VERSION));
-    SDL_Log("Extensions : %s\n", glGetString(GL_EXTENSIONS));
+    SDL_Log("Vendor     : %s\n", bglGetString(GL_VENDOR));
+    SDL_Log("Renderer   : %s\n", bglGetString(GL_RENDERER));
+    SDL_Log("Version    : %s\n", bglGetString(GL_VERSION));
+    SDL_Log("Extensions : %s\n", bglGetString(GL_EXTENSIONS));
     SDL_Log("\n");
 
     status = SDL_GL_GetAttribute(SDL_GL_RED_SIZE, &value);
@@ -296,15 +296,15 @@ main(int argc, char* argv[])
         }
 
         aspectAdjust = (4.0f / 3.0f) / ((float)state->window_w / state->window_h);
-        glViewport(0, 0, state->window_w, state->window_h);
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-        glOrthof(-2.0, 2.0, -2.0 * aspectAdjust, 2.0 * aspectAdjust, -20.0, 20.0);
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
-        glEnable(GL_DEPTH_TEST);
-        glDepthFunc(GL_LESS);
-        glShadeModel(GL_SMOOTH);
+        bglViewport(0, 0, state->window_w, state->window_h);
+        bglMatrixMode(GL_PROJECTION);
+        bglLoadIdentity();
+        bglOrthof(-2.0, 2.0, -2.0 * aspectAdjust, 2.0 * aspectAdjust, -20.0, 20.0);
+        bglMatrixMode(GL_MODELVIEW);
+        bglLoadIdentity();
+        bglEnable(GL_DEPTH_TEST);
+        bglDepthFunc(GL_LESS);
+        bglShadeModel(GL_SMOOTH);
     }
 
     /* Main render loop */
@@ -327,7 +327,7 @@ main(int argc, char* argv[])
                                 break;
                             }
                             /* Change view port to the new window dimensions */
-                            glViewport(0, 0, event.window.data1, event.window.data2);
+                            bglViewport(0, 0, event.window.data1, event.window.data2);
                             /* Update window content */
                             Render();
                             SDL_GL_SwapWindow(state->windows[i]);
@@ -361,7 +361,7 @@ main(int argc, char* argv[])
             ((double)frames * 1000) / (now - then));
     }
 #if USE_ANGLE_GLES
-    //GLESDeInit();
+    GLESDeInit();
 #endif
 #if !defined(__ANDROID__)
     quit(0);
